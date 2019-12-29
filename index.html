@@ -1,0 +1,287 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="css/calculator.css" />
+	 		
+	<title>Race Stats Calculator - Creating a Mythos 2.0</title>
+</head>
+
+<body>
+
+<div class="start">
+	<form>
+		<input type="text" id="racestring">
+		<input type="submit" value="Upload">
+	</form>
+	<div class="results">
+		<p>Power Rank: <span id="powerrank"></span></p>
+		<p>Cost per member: <span id="permember"></span></p>
+		<p>Total cost: <span id="total"></span></p>
+		<p>Final SE cost: <span id="finalsecost"></span></p>
+		<p>Final Modifier: <span id="finalmodifier"></span></p>
+	</div>
+</div>
+
+<div class="maincontainer">
+<div class="left">
+<form>
+<div class="slidecontainer">
+  <input type="range" min="10" max="100" step="10" value="40" class="slider" id="myRange1" >
+  <label for="demo1">Percentage of population that can bear children:</label>
+  <input id="demo1" type="number" min="10" max="100" step="10" >%
+</div>
+<div class="slidecontainer">
+  <input type="range" min="0.5" max="10" step="0.5" value="2.5" class="slider" id="myRange2">
+  <label for="demo2">Average amount of pregnancies per 10 years for a member who can bear children:</label>
+  <input id="demo2" type="number" min="0.5" max="10" step="0.5">
+</div>
+<div class="slidecontainer">
+  <input type="range" min="1" max="" step="1" value="1" class="slider" id="myRange3">
+  <label for="demo3">Average number of children per birth:</label>
+  <input id="demo3" type="number" min="1" max="" step="1">
+</div>
+<div class="slidecontainer">
+  <input type="range" min="1" max="10" step="1" value="3" class="slider" id="myRange4">
+  <label for="demo4">Maximal number of children per birth:</label>
+  <input id="demo4" type="number" min="1" max="10" step="1">
+</div>
+<div class="slidecontainer">
+  <input type="range" min="0" max="1" step="0.005" value="0.035" class="slider" id="myRange5">
+  <label for="demo5">Chance for a birth resulting in multiple children:</label>
+  <input id="demo5" type="number" min="0" max="1" step="0.005">%
+</div>
+<div class="slidecontainer">
+  <input type="range" min="1" max="50" step="1" value="10" class="slider" id="myRange6">
+  <label for="demo6">Maximal number of decades a member of the race is expected to live:</label>
+  <input id="demo6" type="number" min="1" max="50" step="1">
+</div>
+<div class="slidecontainer">
+  <input type="range" min="0" max="90" step="1" value="0" class="slider" id="myRange7">
+  <label for="demo7">Resistance to harmful effects (both combat and non-combat):</label>
+  <input id="demo7" type="number" min="0" max="90" step="1" value="0">%
+</div>
+<div class="slidecontainer">
+  <input type="range" min="0.25" max="10.25" step="0.25" value="0.25" class="slider" id="myRange8">
+  <label for="demo8">Offensive capabilities:</label>
+  <input id="demo8" type="number" min="0.25" max="10.25" step="0.25" value="0.25">
+</div>
+<div class="slidecontainer">
+  <label for="myRange9">Number of members being made:</label>
+  <input type="number" min="1" max="100000" step="1" value="1" class="" id="myRange9">
+</div>
+</form>
+</div>
+
+<div class="right">
+<div class="checkboxcontainer">
+	<div class="checkcontainer"><label for="immortality">Immortality (300 SE): </label><input type="checkbox" autocomplete="off" name="immortality" id="immortality"></div>
+	<div class="checkcontainer"><label for="resurrection">Resurrection (500 SE): </label><input type="checkbox" autocomplete="off" name="resurrection" id="resurrection"></div>
+	<div class="checkcontainer"><label for="indestructibility">Indestructibility (1000 SE): </label><input type="checkbox" autocomplete="off" name="indestructibility" id="indestructibility"></div>
+	<div class="checkcontainer"><label for="nofood">Ability to survive without food (200 SE): </label><input type="checkbox" autocomplete="off" name="nofood" id="nofood"></div>
+	<div class="checkcontainer"><label for="nowater">Ability to survive without water (50 SE): </label><input type="checkbox" autocomplete="off" name="nowater" id="nowater"></div>
+	<div class="checkcontainer"><label for="fertility">Natural Fertility: </label><input type="checkbox" autocomplete="off" name="fertility" id="fertility"></div>
+	<div class="checkcontainer"><label for="flight">Flight (10 SE per Power Rank): </label><input type="checkbox"autocomplete="off"  name="flight" id="flight"></div>
+	<div class="checkcontainer"><label for="teleportation">Teleportation ((25 SE per Power Rank)): </label><input type="checkbox" autocomplete="off" name="teleportation" id="teleportation"></div>
+	<div class="checkcontainer"><label for="planeswalking">Planeswalking (250 SE): </label><input type="checkbox" autocomplete="off" name="planeswalking" id="planeswalking"></div>
+	<div class="checkcontainer"><label for="stealth">Stealth (10 SE per Power Rank): </label><input type="checkbox" autocomplete="off" name="stealth" id="stealth"></div>
+</div>
+</div>
+
+</div>
+
+<div class="final">
+	<button id="calculate">Calculate</button>
+</div>
+
+<script>
+
+var powerrank;
+
+var idarray = [1, 2, 3, 4, 5, 6, 7, 8];
+
+idarray.forEach(myFunction);
+
+function myFunction(item, index) {
+	var output = document.getElementById("demo".concat(item));
+	var slider = document.getElementById("myRange".concat(item));
+	output.value = slider.value;
+	
+	// Update the current slider value (each time you drag the slider handle)
+	slider.oninput = function() {
+		output.value = this.value;
+	}
+	
+	output.oninput = function() {
+		slider.value = this.value;
+	}
+	
+	if (item == 7 || item == 8) {
+		slider.oninput = function () {
+			output.value = this.value;
+			powerrank = Number(Math.floor(Number(document.getElementById("myRange7").value) / 10)
+			+ Math.floor(((document.getElementById("myRange8").value - 0.25) / 0.25) / 4));
+			document.getElementById("powerrank").innerHTML = powerrank;
+		}
+		
+		output.oninput = function () {
+			slider.value = this.value;
+			powerrank = Number(Math.floor(Number(document.getElementById("myRange7").value) / 10)
+			+ Math.floor(((document.getElementById("myRange8").value - 0.25) / 0.25) / 4));
+			document.getElementById("powerrank").innerHTML = powerrank;
+		}
+	}
+	
+}
+
+var averagechildren = document.getElementById("myRange3");
+var averagechildreninput = document.getElementById("demo3");
+var maxchildren = document.getElementById("myRange4");
+var maxchildrenunput = document.getElementById("demo4");
+
+averagechildren.max = maxchildren.value;
+
+maxchildren.oninput = function() {
+//makes myRange3 max a derivative of myRange4 value
+//ensures that it's displayed correctly if the values change dynamically
+	averagechildren.max = this.value;
+	averagechildreninput.max = this.value;
+	maxchildrenunput.value = this.value;
+	
+	if (averagechildren.value > this.value) {
+		averagechildren.value = this.value;
+	}
+	averagechildreninput.value = averagechildren.value;
+}
+
+var powerrankChangers = [document.getElementsByName('indestructibility')[0],
+document.getElementsByName('flight')[0],
+document.getElementsByName('teleportation')[0],
+document.getElementsByName('stealth')[0]];
+
+//window.alert(powerrankChangers[0].value);
+
+powerrankChangers[0].onchange = function () {	
+	if (powerrankChangers[0].checked == true) {
+		powerrank += 10;
+	}
+	else {
+		powerrank -= 10;
+	}
+}
+powerrankChangers[1].onchange = function () {
+	if (powerrankChangers[1].checked == true) {
+		powerrank += 5;
+	}
+	else {
+		powerrank -= 5;
+	}
+}
+powerrankChangers[2].onchange = function () {
+	if (powerrankChangers[2].checked == true) {
+		powerrank += 10;
+	}
+	else {
+		powerrank -= 10;
+	}
+}
+powerrankChangers[3].onchange = function () {
+	if (powerrankChangers[3].checked == true) {
+		powerrank += 5;
+	}
+	else {
+		powerrank -= 5;
+	}
+}
+
+//window.alert(powerrank);
+
+/**/
+
+function addIfTrue(checkbox, cost, multiplier = 1) {
+	if (document.getElementsByName(checkbox)[0].checked == true) {
+	//getElementsByName() ALWAYS returns an array, even if there is only one value, so an array element should be specified when using it 
+		if (multiplier >= 1) {
+			return cost * multiplier;
+		}
+		else {
+			return cost;
+		}
+	}
+	else {
+		return 0;
+	}
+}
+
+//window.alert(Number(document.getElementById("myRange9").value));
+//window.alert(finalsecost);
+
+//window.alert(addIfTrue('flight', 10, powerrank));
+
+var costpermember;
+var totalcost;
+
+document.getElementById('calculate').onclick = function () {
+	
+	var finalmodifier = ((document.getElementById("myRange1").value - 40) * 0.1)
+	+ ((document.getElementById("myRange2").value - 2.5) / 0.5)
+	+ (document.getElementById("myRange3").value - 1)
+	+ (document.getElementById("myRange4").value - 3)
+	+ ((document.getElementById("myRange5").value - 0.035) / 0.005)
+	+ ((document.getElementById("myRange6").value - 10) * 0.1)
+	+ (Number(document.getElementById("myRange7").value) * 0.1)
+	+ (((document.getElementById("myRange8").value - 0.25) / 0.25) / 4);
+
+	if (document.getElementsByName('fertility')[0].checked == true) {
+		finalmodifier += 1;
+	}
+
+	//window.alert(finalmodifier);
+	
+	var finalsecost = addIfTrue('immortality', 300) //this needs strictly single quotes, otherwise doesn't work
+	+ addIfTrue('resurrection', 500)
+	+ addIfTrue('indestructibility', 1000)
+	+ addIfTrue('nofood', 200)
+	+ addIfTrue('nowater', 50)
+	+ addIfTrue('planeswalking', 500)
+	+ addIfTrue('flight', 10, Number(powerrank))
+	+ addIfTrue('teleportation', 25, Number(powerrank))
+	+ addIfTrue('stealth', 10, Number(powerrank))
+	+ 1;
+	
+	/*powerrank = Math.floor(Number(document.getElementById("myRange7").value) / 10)
+	+ Math.floor(((document.getElementById("myRange8").value - 0.25) / 0.25) / 4);*/
+	
+	if (finalmodifier > 0) {
+		costpermember = finalsecost * (1 + finalmodifier);
+	}
+	else if (finalmodifier == 0) {
+		costpermember = finalsecost;
+	}
+	else {
+		costpermember = Math.abs(finalsecost / (1 + finalmodifier));
+	}
+	//window.alert(finalsecost);
+	
+	costpermember = Math.ceil(costpermember);
+	
+	totalcost = costpermember * Number(document.getElementById("myRange9").value);
+	
+	document.getElementById("total").innerHTML = totalcost;
+	document.getElementById("powerrank").innerHTML = powerrank;
+	document.getElementById("permember").innerHTML = costpermember;
+	document.getElementById("finalsecost").innerHTML = finalsecost;
+	document.getElementById("finalmodifier").innerHTML = finalmodifier;
+	//window.alert(finalmodifier);
+	//window.alert(finalsecost);
+	//window.alert(totalcost);
+}
+
+</script>
+
+</body>
+
+</html>
