@@ -65,9 +65,9 @@
   <input id="demo7" type="number" min="0" max="90" step="1" value="0">%
 </div>
 <div class="slidecontainer">
-  <input type="range" min="0.25" max="10.25" step="0.25" value="0.25" class="slider" id="myRange8">
+  <input type="range" min="0" max="10.25" step="0.25" value="0.25" class="slider" id="myRange8">
   <label for="demo8">Offensive capabilities:</label>
-  <input id="demo8" type="number" min="0.25" max="10.25" step="0.25" value="0.25">
+  <input id="demo8" type="number" min="0" max="10.25" step="0.25" value="0.25">
 </div>
 <div class="slidecontainer">
   <label for="myRange9">Number of members being made:</label>
@@ -85,7 +85,7 @@
 	<div class="checkcontainer"><label for="nowater">Ability to survive without water (50 SE): </label><input type="checkbox" autocomplete="off" name="nowater" id="nowater"></div>
 	<div class="checkcontainer"><label for="fertility">Natural Fertility: </label><input type="checkbox" autocomplete="off" name="fertility" id="fertility"></div>
 	<div class="checkcontainer"><label for="flight">Flight (10 SE per Power Rank): </label><input type="checkbox"autocomplete="off"  name="flight" id="flight"></div>
-	<div class="checkcontainer"><label for="teleportation">Teleportation ((25 SE per Power Rank)): </label><input type="checkbox" autocomplete="off" name="teleportation" id="teleportation"></div>
+	<div class="checkcontainer"><label for="teleportation">Teleportation (25 SE per Power Rank): </label><input type="checkbox" autocomplete="off" name="teleportation" id="teleportation"></div>
 	<div class="checkcontainer"><label for="planeswalking">Planeswalking (250 SE): </label><input type="checkbox" autocomplete="off" name="planeswalking" id="planeswalking"></div>
 	<div class="checkcontainer"><label for="stealth">Stealth (10 SE per Power Rank): </label><input type="checkbox" autocomplete="off" name="stealth" id="stealth"></div>
 </div>
@@ -99,7 +99,7 @@
 
 <script>
 
-var powerrank;
+var powerrank = 0;
 
 var idarray = [1, 2, 3, 4, 5, 6, 7, 8];
 
@@ -226,11 +226,15 @@ var totalcost;
 
 document.getElementById('calculate').onclick = function () {
 	
+	if (powerrank < 0) {
+		powerrank = 0;
+	}
+	
 	var finalmodifier = ((document.getElementById("myRange1").value - 40) * 0.1)
 	+ ((document.getElementById("myRange2").value - 2.5) / 0.5)
 	+ (document.getElementById("myRange3").value - 1)
 	+ (document.getElementById("myRange4").value - 3)
-	+ ((document.getElementById("myRange5").value - 0.035) / 0.005)
+	+ (((document.getElementById("myRange5").value - 0.035) / 0.005) * 0.1)
 	+ ((document.getElementById("myRange6").value - 10) * 0.1)
 	+ (Number(document.getElementById("myRange7").value) * 0.1)
 	+ (((document.getElementById("myRange8").value - 0.25) / 0.25) / 4);
@@ -262,7 +266,7 @@ document.getElementById('calculate').onclick = function () {
 		costpermember = finalsecost;
 	}
 	else {
-		costpermember = Math.abs(finalsecost / (1 + finalmodifier));
+		costpermember = finalsecost / (1 + Math.abs(finalmodifier));
 	}
 	//window.alert(finalsecost);
 	
