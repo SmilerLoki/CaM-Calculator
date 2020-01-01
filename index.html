@@ -13,16 +13,20 @@
 <body>
 
 <div class="start">
-	<form>
+	<!--<form>
 		<input type="text" id="racestring">
 		<input type="submit" value="Upload">
-	</form>
+	</form>-->
 	<div class="results">
 		<p>Power Rank: <span id="powerrank"></span></p>
 		<p>Cost per member: <span id="permember"></span></p>
 		<p>Total cost: <span id="total"></span></p>
-		<p>Final SE cost: <span id="finalsecost"></span></p>
+		<!--<p>Final SE cost: <span id="finalsecost"></span></p>
 		<p>Final Modifier: <span id="finalmodifier"></span></p>
+		<div class="forcode">-->
+		<label for="racecode">Race Code: </label><input id="racecode" type="text" value="" disabled >
+			<button id="copyrace">Copy Code</button>
+		</div>
 	</div>
 </div>
 
@@ -69,9 +73,9 @@
   <label for="demo8">Offensive capabilities:</label>
   <input id="demo8" type="number" min="0" max="10.25" step="0.25" value="0.25">
 </div>
-<div class="slidecontainer">
-  <label for="myRange9">Number of members being made:</label>
-  <input type="number" min="1" max="100000" step="1" value="1" class="" id="myRange9">
+<div class="memberamount">
+  <label for="membersmade">Number of members being made:</label>
+  <input type="number" min="1" max="100000" step="1" value="1" class="" id="membersmade">
 </div>
 </form>
 </div>
@@ -98,6 +102,20 @@
 </div>
 
 <script>
+
+document.body.onload = function () {
+	document.getElementById("racecode").style.width = ((document.getElementById("racecode").value.length + 10) * 5) + 'px';
+}
+
+document.getElementById("copyrace").onclick = function () {
+	var copyText = document.getElementById("racecode");
+	copyText.disabled = false;
+	copyText.select();
+	copyText.setSelectionRange(0, 99999);
+	document.execCommand("copy");
+	//alert("Copied the text: " + copyText.value);
+	copyText.disabled = true;
+}
 
 var powerrank = 0;
 var idarray = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -304,13 +322,22 @@ document.getElementById('calculate').onclick = function () {
 	
 	costpermember = Math.ceil(costpermember);
 	
-	totalcost = costpermember * Number(document.getElementById("myRange9").value);
+	totalcost = costpermember * Number(document.getElementById("membersmade").value);
 	
 	document.getElementById("total").innerHTML = totalcost;
 	document.getElementById("powerrank").innerHTML = powerrank;
 	document.getElementById("permember").innerHTML = costpermember;
-	document.getElementById("finalsecost").innerHTML = finalsecost;
-	document.getElementById("finalmodifier").innerHTML = 1 + finalmodifier;
+	//document.getElementById("finalsecost").innerHTML = finalsecost;
+	//document.getElementById("finalmodifier").innerHTML = 1 + finalmodifier;
+	document.getElementById("racecode").value =
+	",,0,0,,0,0,0,0,0,0,0,1,0,0,0,0,0,0.3,1,1,,"
+	+ (document.getElementById("myRange1").value / 100) + ","
+	+ document.getElementById("myRange2").value + ",12,"
+	+ document.getElementById("myRange3").value + ","
+	+ document.getElementById("myRange4").value + ","
+	+ document.getElementById("myRange5").value + ","
+	+ document.getElementById("myRange6").value;
+	document.getElementById("racecode").style.width = ((document.getElementById("racecode").value.length + 10) * 5) + 'px';
 	//window.alert(finalmodifier);
 	//window.alert(finalsecost);
 	//window.alert(totalcost);
