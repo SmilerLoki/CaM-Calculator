@@ -78,9 +78,9 @@
 
 <div class="right">
 <div class="checkboxcontainer">
-	<div class="checkcontainer"><label for="immortality">Immortality (300 SE): </label><input type="checkbox" autocomplete="off" name="immortality" id="immortality"></div>
-	<div class="checkcontainer"><label for="resurrection">Resurrection (500 SE): </label><input type="checkbox" autocomplete="off" name="resurrection" id="resurrection"></div>
-	<div class="checkcontainer"><label for="indestructibility">Indestructibility (1000 SE): </label><input type="checkbox" autocomplete="off" name="indestructibility" id="indestructibility"></div>
+	<div class="checkcontainer"><label for="immortality">Immortality (500 SE): </label><input type="checkbox" autocomplete="off" name="immortality" id="immortality"></div>
+	<div class="checkcontainer"><label for="resurrection">Resurrection (1000 SE): </label><input type="checkbox" autocomplete="off" name="resurrection" id="resurrection"></div>
+	<div class="checkcontainer"><label for="indestructibility">Indestructibility (1500 SE): </label><input type="checkbox" autocomplete="off" name="indestructibility" id="indestructibility"></div>
 	<div class="checkcontainer"><label for="nofood">Ability to survive without food (200 SE): </label><input type="checkbox" autocomplete="off" name="nofood" id="nofood"></div>
 	<div class="checkcontainer"><label for="nowater">Ability to survive without water (50 SE): </label><input type="checkbox" autocomplete="off" name="nowater" id="nowater"></div>
 	<div class="checkcontainer"><label for="fertility">Natural Fertility: </label><input type="checkbox" autocomplete="off" name="fertility" id="fertility"></div>
@@ -100,7 +100,6 @@
 <script>
 
 var powerrank = 0;
-
 var idarray = [1, 2, 3, 4, 5, 6, 7, 8];
 
 idarray.forEach(myFunction);
@@ -157,6 +156,17 @@ maxchildren.oninput = function() {
 	averagechildreninput.value = averagechildren.value;
 }
 
+document.getElementById('immortality').onchange = function () {
+	if (document.getElementById('immortality').checked == true) {
+		document.getElementById("myRange6").disabled = true;
+		document.getElementById("demo6").disabled = true;
+	}
+	else {
+		document.getElementById("myRange6").disabled = false;
+		document.getElementById("demo6").disabled = false;
+	}
+}
+
 var powerrankChangers = [document.getElementsByName('indestructibility')[0],
 document.getElementsByName('flight')[0],
 document.getElementsByName('teleportation')[0],
@@ -166,10 +176,18 @@ document.getElementsByName('stealth')[0]];
 
 powerrankChangers[0].onchange = function () {	
 	if (powerrankChangers[0].checked == true) {
-		powerrank += 10;
+		powerrank -= Math.floor(Number(document.getElementById("myRange7").value) / 10);
+		powerrank += 10;		
+		document.getElementById("myRange7").disabled = true;
+		document.getElementById("demo7").disabled = true;
+		//document.getElementById("myRange7").value = 0;
+		//document.getElementById("demo7").value = document.getElementById("myRange7").value;
 	}
 	else {
+		powerrank += Math.floor(Number(document.getElementById("myRange7").value) / 10);
 		powerrank -= 10;
+		document.getElementById("myRange7").disabled = false;
+		document.getElementById("demo7").disabled = false;
 	}
 }
 powerrankChangers[1].onchange = function () {
@@ -226,28 +244,35 @@ var totalcost;
 
 document.getElementById('calculate').onclick = function () {
 	
+	if (powerrankChangers[0].checked == false //redefines powerrank in case of reload because slider values persist on reload
+		&& powerrankChangers[1].checked == false
+		&& powerrankChangers[2].checked == false
+		&& powerrankChangers[3].checked == false) {
+		powerrank = Number(Math.floor(Number(document.getElementById("myRange7").value) / 10)
+		+ Math.floor(((document.getElementById("myRange8").value - 0.25) / 0.25) / 4));
+	}
+	
 	if (powerrank < 0) {
 		powerrank = 0;
 	}
 	
-	var finalmodifier = ((document.getElementById("myRange1").value - 40) * 0.1)
+	var finalmodifier = Number(((document.getElementById("myRange1").value - 40) * 0.1)
+	//due to the nature of Javascript number representation some decimals might have inexact values
 	+ ((document.getElementById("myRange2").value - 2.5) / 0.5)
 	+ (document.getElementById("myRange3").value - 1)
 	+ (document.getElementById("myRange4").value - 3)
 	+ (((document.getElementById("myRange5").value - 0.035) / 0.005) * 0.1)
-	+ ((document.getElementById("myRange6").value - 10) * 0.1)
-	+ (Number(document.getElementById("myRange7").value) * 0.1)
-	+ (((document.getElementById("myRange8").value - 0.25) / 0.25) / 4);
-
+	+ (((document.getElementById("myRange8").value - 0.25) / 0.25) / 4));
+		
 	if (document.getElementsByName('fertility')[0].checked == true) {
 		finalmodifier += 1;
 	}
 
 	//window.alert(finalmodifier);
 	
-	var finalsecost = addIfTrue('immortality', 300) //this needs strictly single quotes, otherwise doesn't work
-	+ addIfTrue('resurrection', 500)
-	+ addIfTrue('indestructibility', 1000)
+	var finalsecost = addIfTrue('immortality', 500) //this needs strictly single quotes, otherwise doesn't work
+	+ addIfTrue('resurrection', 1000)
+	+ addIfTrue('indestructibility', 1500)
 	+ addIfTrue('nofood', 200)
 	+ addIfTrue('nowater', 50)
 	+ addIfTrue('planeswalking', 500)
@@ -255,6 +280,13 @@ document.getElementById('calculate').onclick = function () {
 	+ addIfTrue('teleportation', 25, Number(powerrank))
 	+ addIfTrue('stealth', 10, Number(powerrank))
 	+ 1;
+		
+	if (document.getElementById('immortality').checked == false) {
+		finalsecost += ((document.getElementById("myRange6").value - 10) * 0.1);
+	}
+	if (powerrankChangers[0].checked == false) {
+		finalsecost += (Number(document.getElementById("myRange7").value) * 10);
+	}
 	
 	/*powerrank = Math.floor(Number(document.getElementById("myRange7").value) / 10)
 	+ Math.floor(((document.getElementById("myRange8").value - 0.25) / 0.25) / 4);*/
@@ -278,7 +310,7 @@ document.getElementById('calculate').onclick = function () {
 	document.getElementById("powerrank").innerHTML = powerrank;
 	document.getElementById("permember").innerHTML = costpermember;
 	document.getElementById("finalsecost").innerHTML = finalsecost;
-	document.getElementById("finalmodifier").innerHTML = finalmodifier;
+	document.getElementById("finalmodifier").innerHTML = 1 + finalmodifier;
 	//window.alert(finalmodifier);
 	//window.alert(finalsecost);
 	//window.alert(totalcost);
