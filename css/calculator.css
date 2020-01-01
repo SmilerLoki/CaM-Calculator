@@ -67,6 +67,24 @@
 	opacity: 1; /* Fully shown on mouse-over */
 }
 
+.slider:disabled {
+	background: #F5F5F5;
+}
+
+.slider:disabled::-moz-range-thumb {
+	background: #F5F5F5;
+	cursor: auto;
+}
+
+.slider:disabled::-webkit-slider-thumb {
+	background: #F5F5F5;
+	cursor: auto;
+}
+
+.slider:disabled:hover {
+	opacity: 0.7;
+}
+
 .start {
 	text-align:center;
 }
@@ -82,7 +100,7 @@
 	//width: 40%;
 	//float: left;
 	//display: block;
-	//display:inline-block;
+	display:inline-block;
 	//vertical-align:middle;
 }
 
