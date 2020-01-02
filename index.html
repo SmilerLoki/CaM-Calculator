@@ -233,19 +233,6 @@ function myFunction(item, index) {
 	
 }
 
-/*document.getElementById("myRange4").oninput = function() {
-//makes myRange3 max a derivative of myRange4 value
-//ensures that it's displayed correctly if the values change dynamically
-	document.getElementById("myRange3").max = this.value;
-	document.getElementById("demo3").max = this.value;
-	document.getElementById("demo4").value = this.value;
-	
-	if (document.getElementById("myRange3").value > this.value) {
-		document.getElementById("myRange3").value = this.value;
-	}
-	document.getElementById("demo3").value = document.getElementById("myRange3").value;
-}*/
-
 document.getElementById('immortality').onchange = function () {
 	if (document.getElementById('immortality').checked == true) {
 		document.getElementById("myRange6").disabled = true;
@@ -373,6 +360,9 @@ document.getElementById('calculate').onclick = function () {
 	
 	if (document.getElementById("myRange3").value != document.getElementById("myRange4").value) {
 		finalmodifier += ((document.getElementById("myRange5").value - 0.035) / 0.005) * 0.1;
+	}
+	else {
+		finalmodifier += ((0 - 0.035) / 0.005) * 0.1;
 	}
 	
 	if (document.getElementsByName('fertility')[0].checked == true) {
