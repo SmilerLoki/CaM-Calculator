@@ -105,7 +105,7 @@
 
 document.body.onload = function () {
 	if ((document.getElementById("racecode").value.length + 10) * 5 > screen.width) {
-		document.getElementById("racecode").style.width = screen.width;
+		document.getElementById("racecode").style.width = screen.width + 'px';
 	}
 	else {
 		document.getElementById("racecode").style.width = ((document.getElementById("racecode").value.length + 10) * 5) + 'px';
@@ -348,7 +348,7 @@ document.getElementById('calculate').onclick = function () {
 		document.getElementById("racecode").value += "0";
 	}
 	if ((document.getElementById("racecode").value.length + 10) * 5 > screen.width) {
-		document.getElementById("racecode").style.width = screen.width;
+		document.getElementById("racecode").style.width = screen.width + 'px';
 	}
 	else {
 		document.getElementById("racecode").style.width = ((document.getElementById("racecode").value.length + 10) * 5) + 'px';
