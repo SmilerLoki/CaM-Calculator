@@ -151,9 +151,11 @@ function myFunction(item, index) {
 			output.value = this.value;
 			if (document.getElementById("myRange3").value == document.getElementById("myRange4").value) {
 				document.getElementById("myRange5").disabled = true;
+				document.getElementById("demo5").disabled = true;
 			}
 			else {
 				document.getElementById("myRange5").disabled = false;
+				document.getElementById("demo5").disabled = false;
 			}
 		}
 		
@@ -198,9 +200,11 @@ function myFunction(item, index) {
 			slider.value = this.value;
 			if (document.getElementById("myRange4").value == document.getElementById("myRange3").value) {
 				document.getElementById("myRange5").disabled = true;
+				document.getElementById("demo5").disabled = true;
 			}
 			else {
 				document.getElementById("myRange5").disabled = false;
+				document.getElementById("demo5").disabled = false;
 			}
 		}		
 	}
