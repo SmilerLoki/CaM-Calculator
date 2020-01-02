@@ -104,7 +104,12 @@
 <script>
 
 document.body.onload = function () {
-	document.getElementById("racecode").style.width = ((document.getElementById("racecode").value.length + 10) * 5) + 'px';
+	if ((document.getElementById("racecode").value.length + 10) * 5 > screen.width) {
+		document.getElementById("racecode").style.width = screen.width;
+	}
+	else {
+		document.getElementById("racecode").style.width = ((document.getElementById("racecode").value.length + 10) * 5) + 'px';
+	}
 }
 
 document.getElementById("copyrace").onclick = function () {
@@ -335,9 +340,19 @@ document.getElementById('calculate').onclick = function () {
 	+ document.getElementById("myRange2").value + ",12,"
 	+ document.getElementById("myRange3").value + ","
 	+ document.getElementById("myRange4").value + ","
-	+ document.getElementById("myRange5").value + ","
-	+ document.getElementById("myRange6").value;
-	document.getElementById("racecode").style.width = ((document.getElementById("racecode").value.length + 10) * 5) + 'px';
+	+ document.getElementById("myRange5").value + ",";
+	if (document.getElementById('immortality').checked == false) {
+		document.getElementById("racecode").value += document.getElementById("myRange6").value;
+	}
+	else {
+		document.getElementById("racecode").value += "0";
+	}
+	if ((document.getElementById("racecode").value.length + 10) * 5 > screen.width) {
+		document.getElementById("racecode").style.width = screen.width;
+	}
+	else {
+		document.getElementById("racecode").style.width = ((document.getElementById("racecode").value.length + 10) * 5) + 'px';
+	}
 	//window.alert(finalmodifier);
 	//window.alert(finalsecost);
 	//window.alert(totalcost);
