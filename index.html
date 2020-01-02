@@ -22,9 +22,9 @@
 		<p>Cost per member: <span id="permember"></span></p>
 		<p>Total cost: <span id="total"></span></p>
 		<!--<p>Final SE cost: <span id="finalsecost"></span></p>
-		<p>Final Modifier: <span id="finalmodifier"></span></p>
-		<div class="forcode">-->
-		<label for="racecode">Race Code: </label><input id="racecode" type="text" value="" disabled >
+		<p>Final Modifier: <span id="finalmodifier"></span></p>-->
+		<div class="forcode">
+		<label for="racecode">Race Code: </label><input id="racecode" type="text" value="" readonly >
 			<button id="copyrace">Copy Code</button>
 		</div>
 	</div>
@@ -114,13 +114,18 @@ document.body.onload = function () {
 
 document.getElementById("copyrace").onclick = function () {
 	var copyText = document.getElementById("racecode");
-	copyText.disabled = false;
 	copyText.select();
 	copyText.setSelectionRange(0, 99999);
 	document.execCommand("copy");
 	//alert("Copied the text: " + copyText.value);
-	copyText.disabled = true;
 }
+
+//var averagechildren = document.getElementById("myRange3");
+//var averagechildreninput = document.getElementById("demo3");
+//var maxchildren = document.getElementById("myRange4");
+//var maxchildrenunput = document.getElementById("demo4");
+
+document.getElementById("myRange3").max = document.getElementById("myRange4").value;
 
 var powerrank = 0;
 var idarray = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -141,11 +146,69 @@ function myFunction(item, index) {
 		slider.value = this.value;
 	}
 	
+	if (item == 3) {
+		slider.oninput = function () {
+			output.value = this.value;
+			if (document.getElementById("myRange3").value == document.getElementById("myRange4").value) {
+				document.getElementById("myRange5").disabled = true;
+			}
+			else {
+				document.getElementById("myRange5").disabled = false;
+			}
+		}
+		
+		output.oninput = function () {
+			slider.value = this.value;
+			if (document.getElementById("myRange3").value == document.getElementById("myRange4").value) {
+				document.getElementById("myRange5").disabled = true;
+			}
+			else {
+				document.getElementById("myRange5").disabled = false;
+			}
+		}		
+	}
+	
+	if (item == 4) {
+		slider.oninput = function () {
+			output.value = this.value;			
+			document.getElementById("myRange3").max = this.value;
+			document.getElementById("demo3").max = this.value;
+			//preceding 2 lines of code make myRange3 max a derivative of myRange4 value
+						
+			if (document.getElementById("myRange3").value == this.value) {
+				document.getElementById("myRange5").disabled = true;
+			}
+			else {
+				document.getElementById("myRange5").disabled = false;
+			}
+			//document.getElementById("finalsecost").innerHTML = document.getElementById("myRange3").value;
+			
+			if (document.getElementById("myRange3").value > output.value) {
+				document.getElementById("myRange3").value = output.value;
+			}
+			document.getElementById("demo3").value = document.getElementById("myRange3").value;
+			//preceding 3 lines of code ensures that the derivative value is displayed everywhere correctly if the values change dynamically
+		}
+		
+		output.oninput = function () {
+			slider.value = this.value;
+			if (document.getElementById("myRange4").value == document.getElementById("myRange3").value) {
+				document.getElementById("myRange5").disabled = true;
+			}
+			else {
+				document.getElementById("myRange5").disabled = false;
+			}
+		}		
+	}
+	
 	if (item == 7 || item == 8) {
 		slider.oninput = function () {
 			output.value = this.value;
 			powerrank = Number(Math.floor(Number(document.getElementById("myRange7").value) / 10)
 			+ Math.floor(((document.getElementById("myRange8").value - 0.25) / 0.25) / 4));
+			if (powerrank < 0) {
+				powerrank = 0;
+			}
 			document.getElementById("powerrank").innerHTML = powerrank;
 		}
 		
@@ -153,31 +216,27 @@ function myFunction(item, index) {
 			slider.value = this.value;
 			powerrank = Number(Math.floor(Number(document.getElementById("myRange7").value) / 10)
 			+ Math.floor(((document.getElementById("myRange8").value - 0.25) / 0.25) / 4));
+			if (powerrank < 0) {
+				powerrank = 0;
+			}
 			document.getElementById("powerrank").innerHTML = powerrank;
 		}
 	}
 	
 }
 
-var averagechildren = document.getElementById("myRange3");
-var averagechildreninput = document.getElementById("demo3");
-var maxchildren = document.getElementById("myRange4");
-var maxchildrenunput = document.getElementById("demo4");
-
-averagechildren.max = maxchildren.value;
-
-maxchildren.oninput = function() {
+/*document.getElementById("myRange4").oninput = function() {
 //makes myRange3 max a derivative of myRange4 value
 //ensures that it's displayed correctly if the values change dynamically
-	averagechildren.max = this.value;
-	averagechildreninput.max = this.value;
-	maxchildrenunput.value = this.value;
+	document.getElementById("myRange3").max = this.value;
+	document.getElementById("demo3").max = this.value;
+	document.getElementById("demo4").value = this.value;
 	
-	if (averagechildren.value > this.value) {
-		averagechildren.value = this.value;
+	if (document.getElementById("myRange3").value > this.value) {
+		document.getElementById("myRange3").value = this.value;
 	}
-	averagechildreninput.value = averagechildren.value;
-}
+	document.getElementById("demo3").value = document.getElementById("myRange3").value;
+}*/
 
 document.getElementById('immortality').onchange = function () {
 	if (document.getElementById('immortality').checked == true) {
@@ -267,6 +326,24 @@ var totalcost;
 
 document.getElementById('calculate').onclick = function () {
 	
+	var error;
+	
+	function checkError (item, index) {
+		var userinput = document.getElementById("demo".concat(item));
+		if (!userinput.checkValidity()) {
+			error = true;
+		}		
+	}
+	
+	idarray.forEach(checkError);
+	
+	if (error == true || !document.getElementById("membersmade").checkValidity()) { //checks the validity of user input in all number fields
+		window.alert('Please use only valid numbers'); //displays an error if user input is NOT valid
+	}
+	else { //calculates the race cost as intended if user input is valid
+	
+	//window.alert(document.getElementById("membersmade").validationMessage);
+	
 	if (powerrankChangers[0].checked == false //redefines powerrank in case of reload because slider values persist on reload
 		&& powerrankChangers[1].checked == false
 		&& powerrankChangers[2].checked == false
@@ -284,9 +361,12 @@ document.getElementById('calculate').onclick = function () {
 	+ ((document.getElementById("myRange2").value - 2.5) / 0.5)
 	+ (document.getElementById("myRange3").value - 1)
 	+ (document.getElementById("myRange4").value - 3)
-	+ (((document.getElementById("myRange5").value - 0.035) / 0.005) * 0.1)
 	+ (((document.getElementById("myRange8").value - 0.25) / 0.25) / 4));
-		
+	
+	if (document.getElementById("myRange3").value != document.getElementById("myRange4").value) {
+		finalmodifier += ((document.getElementById("myRange5").value - 0.035) / 0.005) * 0.1;
+	}
+	
 	if (document.getElementsByName('fertility')[0].checked == true) {
 		finalmodifier += 1;
 	}
@@ -340,7 +420,12 @@ document.getElementById('calculate').onclick = function () {
 	+ document.getElementById("myRange2").value + ",12,"
 	+ document.getElementById("myRange3").value + ","
 	+ document.getElementById("myRange4").value + ","
-	+ document.getElementById("myRange5").value + ",";
+	if (document.getElementById("myRange3").value != document.getElementById("myRange4").value) {
+		document.getElementById("racecode").value += document.getElementById("myRange5").value + ",";
+	}
+	else {
+		document.getElementById("racecode").value += "0,";
+	}
 	if (document.getElementById('immortality').checked == false) {
 		document.getElementById("racecode").value += document.getElementById("myRange6").value;
 	}
@@ -358,6 +443,7 @@ document.getElementById('calculate').onclick = function () {
 	//window.alert(totalcost);
 	//window.alert(screen.width);
 	//window.alert((document.getElementById("racecode").value.length + 10) * 5);
+	}
 }
 
 </script>
